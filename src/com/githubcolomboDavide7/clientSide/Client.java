@@ -1,5 +1,8 @@
 package com.githubcolomboDavide7.clientSide;
 
+import com.githubcolomboDavide7.tools.AbstractTool;
+import com.githubcolomboDavide7.tools.ClientTool;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -10,11 +13,14 @@ public class Client implements IClient{
         return new Client(ipAddress, portNumber);
     }
 
-    private Socket socket;
+    private final Socket socket;
+    private final AbstractTool clientTool;
 
     private Client(String ipAddress, int portNumber) throws ConnectException {
         try {
             this.socket = new Socket(ipAddress, portNumber);
+            this.clientTool = new ClientTool(this.socket.getInetAddress().getHostName() + ".txt");
+            this.clientTool.writeToOrCreate();
         } catch(IOException e) {
             throw new ConnectException("Error establishing a connection to port number " + portNumber
                                      + "with ip address " + ipAddress);
@@ -49,5 +55,10 @@ public class Client implements IClient{
             throw new ConnectException("Error closing the connection.");
         }
     }
-    
+
+    @Override
+    public String appendHostNameToPath(String path) {
+        return path + this.socket.getInetAddress().getHostName();
+    }
+
 }

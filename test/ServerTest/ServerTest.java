@@ -15,6 +15,7 @@ public class ServerTest {
         System.out.println("* Server test: shouldCreateServer()\n");
         try {
             IServer s = Server.open(remotePort);
+            s.printHostName();
             assertTrue(s.matchPortNumber(remotePort));
         }catch(ConnectException ex){
             System.out.println(ex.getMessage());

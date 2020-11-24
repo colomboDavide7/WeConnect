@@ -2,7 +2,9 @@ package com.githubcolomboDavide7.serverSide;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.UnknownHostException;
 
 public class Server implements IServer {
 
@@ -38,4 +40,15 @@ public class Server implements IServer {
             throw new ConnectException("Error closing the server socket");
         }
     }
+
+    @Override
+    public void printHostName() {
+        System.out.println(this.socket.getInetAddress().getHostName());
+    }
+
+    @Override
+    public String appendHostNameToPath(String path) {
+        return path + this.socket.getInetAddress().getHostName();
+    }
+
 }
