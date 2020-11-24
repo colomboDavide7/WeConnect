@@ -6,12 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class ClientTool extends AbstractTool {
+public class ClientFileManager extends AbstractFileManager {
 
     private final String clientDir = "knownhost/";
     private final String filename;
 
-    public ClientTool(String filename){
+    public ClientFileManager(String filename){
         super();
         this.filename = filename;
     }

@@ -1,10 +1,14 @@
 package clientTest;
 
 import java.net.*;
+import java.util.*;
+
 import com.githubcolomboDavide7.clientSide.*;
+import com.githubcolomboDavide7.connection.ConnectionInfo;
 import com.githubcolomboDavide7.serverSide.*;
 
-import com.githubcolomboDavide7.tools.AbstractTool;
+import com.githubcolomboDavide7.tools.AbstractFileManager;
+import com.githubcolomboDavide7.tools.AbstractFormatter;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -55,7 +59,7 @@ public class ClientTest {
     @Test
     public void shouldTestKnownHostFileExistence(){
         System.out.println("* Client test: shouldTestKnownHostFileExistence()\n");
-        assertFalse(AbstractTool.existFile(this.myServer.appendHostNameToPath(this.workingDir) + ".txt"));
+        assertFalse(AbstractFileManager.existFile(this.myServer.appendHostNameToPath(this.workingDir) + ".txt"));
     }
 
     @Test
@@ -64,12 +68,37 @@ public class ClientTest {
         String ipAddress = "127.0.0.1";
         try {
             IClient c = Client.open(ipAddress, this.remotePort);    // open
-            assertTrue(AbstractTool.existFile(c.appendHostNameToPath(this.workingDir) + ".txt"));
+            assertTrue(AbstractFileManager.existFile(c.appendHostNameToPath(this.workingDir) + ".txt"));
             c.close();                                              // close
         } catch(ConnectException e) {
             System.out.println(e.getMessage());
             fail();
         }
+    }
+
+    @Test
+    public void shouldFormatClientConnectionInfo(){
+        System.out.println("* Client test: shouldFormatClientConnectionInfo()\n");
+        String ipAddress = "127.0.0.1";
+        try {
+            IClient c = Client.open(ipAddress, this.remotePort);    // open
+            String expected = "IP_ADDRESS=127.0.0.1,PORT_NUMBER=49899";
+            Map<ConnectionInfo, String> info = new HashMap<>();
+            info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.remotePort));
+            info.put(ConnectionInfo.IP_ADDRESS, ipAddress);
+            assertEquals(expected, AbstractFormatter.formatConnectionInfo(info));
+
+            c.close();                                              // close
+        } catch(ConnectException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
+    @Test
+    public void shouldWriteClientConnectionInfoToFile(){
+        System.out.println("* Client test: shouldWriteClientConnectionInfoToFile()\n");
+
     }
 
 }

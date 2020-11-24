@@ -1,7 +1,7 @@
 package com.githubcolomboDavide7.clientSide;
 
-import com.githubcolomboDavide7.tools.AbstractTool;
-import com.githubcolomboDavide7.tools.ClientTool;
+import com.githubcolomboDavide7.tools.AbstractFileManager;
+import com.githubcolomboDavide7.tools.ClientFileManager;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -14,12 +14,12 @@ public class Client implements IClient{
     }
 
     private final Socket socket;
-    private final AbstractTool clientTool;
+    private final AbstractFileManager clientTool;
 
     private Client(String ipAddress, int portNumber) throws ConnectException {
         try {
             this.socket = new Socket(ipAddress, portNumber);
-            this.clientTool = new ClientTool(this.socket.getInetAddress().getHostName() + ".txt");
+            this.clientTool = new ClientFileManager(this.socket.getInetAddress().getHostName() + ".txt");
             this.clientTool.writeToOrCreate();
         } catch(IOException e) {
             throw new ConnectException("Error establishing a connection to port number " + portNumber
@@ -59,6 +59,11 @@ public class Client implements IClient{
     @Override
     public String appendHostNameToPath(String path) {
         return path + this.socket.getInetAddress().getHostName();
+    }
+
+    @Override
+    public String toString(){
+        return this.socket.getInetAddress().getHostAddress() + "\t" + this.socket.getPort();
     }
 
 }
