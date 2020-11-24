@@ -1,25 +1,23 @@
 package clientTest;
 
-import com.githubcolomboDavide7.clientSide.Client;
-import com.githubcolomboDavide7.clientSide.IClient;
+import java.net.*;
+import com.githubcolomboDavide7.clientSide.*;
+import com.githubcolomboDavide7.serverSide.*;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.ServerSocket;
-
 public class ClientTest {
 
-    private ServerSocket serverSocket;
-    private final int serverPort = 49899;
+    private IServer myServer;
+    private final int remotePort = 49899;
 
     @Before
     public void shouldCreateServer(){
         try {
-            this.serverSocket = new ServerSocket(serverPort);
-        } catch(IOException e) {
-            e.printStackTrace();
+            this.myServer = Server.open(remotePort);
+        } catch(ConnectException ex) {
+            System.out.println(ex.getMessage());
             fail();
         }
     }
@@ -27,9 +25,9 @@ public class ClientTest {
     @After
     public void shouldCloseServerSocket(){
         try {
-            this.serverSocket.close();
-        } catch(IOException e) {
-            e.printStackTrace();
+            this.myServer.close();
+        } catch(ConnectException ex) {
+            System.out.println(ex.getMessage());
             fail();
         }
     }
@@ -39,11 +37,11 @@ public class ClientTest {
         System.out.println("* Client test: shouldCreateClient()\n");
         String ipAddress = "127.0.0.1";
         try {
-            IClient c = Client.open(ipAddress, this.serverPort);    // open
+            IClient c = Client.open(ipAddress, this.remotePort);    // open
             assertTrue(c.isBound());
             assertTrue(c.isConnected());
             assertTrue(c.matchIPAddress(ipAddress));
-            assertTrue(c.matchPortNumber(this.serverPort));
+            assertTrue(c.matchPortNumber(this.remotePort));
             c.close();                                              // close
         } catch(ConnectException e) {
             System.out.println(e.getMessage());
