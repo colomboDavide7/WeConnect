@@ -56,12 +56,6 @@ public class ClientTest {
     }
 
     @Test
-    public void shouldTestKnownHostFileExistence(){
-        System.out.println("* Client test: shouldTestKnownHostFileExistence()\n");
-        assertFalse(AbstractFileManager.existFile(this.myServer.appendHostNameToPath(this.workingDir) + ".txt"));
-    }
-
-    @Test
     public void shouldCreateKnownHostFileAtFirstConnection(){
         System.out.println("* Client test: shouldCreateKnownHostFileAtFirstConnection()\n");
         String ipAddress = "127.0.0.1";

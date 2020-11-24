@@ -1,6 +1,7 @@
 package com.githubcolomboDavide7.serverSide;
 
 import java.net.ConnectException;
+import java.util.List;
 
 public interface IServer extends IServerComparable {
 
@@ -8,6 +9,6 @@ public interface IServer extends IServerComparable {
 
     void printHostName();
 
-    String appendHostNameToPath(String path);
+    List<String> getEstablishedConnections();
 
 }

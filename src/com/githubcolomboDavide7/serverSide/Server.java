@@ -1,41 +1,70 @@
 package com.githubcolomboDavide7.serverSide;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
+import com.githubcolomboDavide7.connection.*;
+import com.githubcolomboDavide7.tools.*;
 
-public class Server implements IServer {
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class Server implements IServer, Runnable {
 
     public static IServer open(int portNumber) throws ConnectException {
         return new Server(portNumber);
     }
 
-    private ServerSocket socket;
+    private final ServerSocket serverSocket;
+    private final AbstractFileManager serverFileManager;
 
     private Server(int portNumber) throws ConnectException {
         try {
-            this.socket = new ServerSocket(portNumber);
+            this.serverSocket = new ServerSocket(portNumber);
+            this.serverFileManager = new ServerFileManager(this.serverSocket.getInetAddress().getHostAddress() + ".txt");
+
+            // Starting a Thread that listen to possible clients that wants to connect
+            new Thread(this).start();
+
         } catch(IOException e) {
             throw new ConnectException("Error establishing a connection at port " + portNumber);
         }
     }
 
     @Override
+    public void run() {
+        while(!this.serverSocket.isClosed()){
+            try {
+                Socket client = this.serverSocket.accept();
+                this.serverFileManager.setConnectionInfoToWrite(createConnectionInfo(client));
+                this.serverFileManager.writeToOrCreate();
+                Thread.sleep(1000);
+            } catch(IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private Map<ConnectionInfo, String> createConnectionInfo(Socket client){
+        Map<ConnectionInfo, String> info = new HashMap<>();
+        info.put(ConnectionInfo.IP_ADDRESS, client.getInetAddress().getHostAddress());
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.serverSocket.getLocalPort()));
+        return info;
+    }
+
+    @Override
     public boolean isBound() {
-        return this.socket.isBound();
+        return this.serverSocket.isBound();
     }
 
     @Override
     public boolean matchPortNumber(int portNumber) {
-        return this.socket.getLocalPort() == portNumber;
+        return this.serverSocket.getLocalPort() == portNumber;
     }
 
     @Override
     public void close() throws ConnectException {
         try {
-            this.socket.close();
+            this.serverSocket.close();
         } catch(IOException e) {
             throw new ConnectException("Error closing the server socket");
         }
@@ -43,12 +72,12 @@ public class Server implements IServer {
 
     @Override
     public void printHostName() {
-        System.out.println(this.socket.getInetAddress().getHostName());
+        System.out.println(this.serverSocket.getInetAddress().getHostName());
     }
 
     @Override
-    public String appendHostNameToPath(String path) {
-        return path + this.socket.getInetAddress().getHostName();
+    public List<String> getEstablishedConnections() {
+        return this.serverFileManager.openAndReadTextFile();
     }
 
 }
