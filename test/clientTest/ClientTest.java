@@ -4,11 +4,10 @@ import java.net.*;
 import java.util.*;
 
 import com.githubcolomboDavide7.clientSide.*;
-import com.githubcolomboDavide7.connection.ConnectionInfo;
+import com.githubcolomboDavide7.connection.*;
 import com.githubcolomboDavide7.serverSide.*;
+import com.githubcolomboDavide7.tools.*;
 
-import com.githubcolomboDavide7.tools.AbstractFileManager;
-import com.githubcolomboDavide7.tools.AbstractFormatter;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -87,7 +86,6 @@ public class ClientTest {
             info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.remotePort));
             info.put(ConnectionInfo.IP_ADDRESS, ipAddress);
             assertEquals(expected, AbstractFormatter.formatConnectionInfo(info));
-
             c.close();                                              // close
         } catch(ConnectException e) {
             System.out.println(e.getMessage());
@@ -98,7 +96,18 @@ public class ClientTest {
     @Test
     public void shouldWriteClientConnectionInfoToFile(){
         System.out.println("* Client test: shouldWriteClientConnectionInfoToFile()\n");
-
+        String ipAddress = "127.0.0.1";
+        try {
+            IClient c = Client.open(ipAddress, this.remotePort);    // open
+            String expected = "IP_ADDRESS=127.0.0.1,PORT_NUMBER=49899";
+            List<String> lines = c.getEstablishedConnections();
+            assertEquals(1, lines.size());
+            assertEquals(expected, lines.get(0));
+            c.close();                                              // close
+        } catch(ConnectException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
     }
 
 }

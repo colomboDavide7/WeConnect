@@ -11,27 +11,20 @@ public class AbstractFormatter {
 
     public static String formatConnectionInfo(Map<ConnectionInfo, String> info){
         StringBuilder formatted = new StringBuilder();
-        Map<ConnectionInfo, String> ordered = reorderValues(info);
-        int maxPos = getMaxOrderPosition(ordered);
-        for(ConnectionInfo i : ordered.keySet()) {
-            formatted.append(i).append(keyvalueSeparator).append(info.get(i));
-            if(i.order == maxPos)
-                break;
-            formatted.append(fieldSeparator);
-        }
-        return formatted.toString();
-    }
-
-    private static Map<ConnectionInfo, String> reorderValues(Map<ConnectionInfo, String> toReorder){
-        Map<ConnectionInfo, String> ordered = new HashMap<>(toReorder.size());
+        int maxPos = getMaxOrderPosition(info);
         int currentPos = 1;
-        while(currentPos <= toReorder.size()) {
-            for(ConnectionInfo i : toReorder.keySet())
-                if(i.order == currentPos)
-                    ordered.put(i, toReorder.get(i));
+        while(currentPos <= maxPos) {
+            for(ConnectionInfo i : info.keySet()) {
+                if(i.order == currentPos) {
+                    formatted.append(i).append(keyvalueSeparator).append(info.get(i));
+                    if(i.order == maxPos)
+                        break;
+                    formatted.append(fieldSeparator);
+                }
+            }
             currentPos++;
         }
-        return ordered;
+        return formatted.toString();
     }
 
     private static int getMaxOrderPosition(Map<ConnectionInfo, String> info){

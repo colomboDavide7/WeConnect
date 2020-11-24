@@ -1,11 +1,12 @@
 package com.githubcolomboDavide7.clientSide;
 
+import com.githubcolomboDavide7.connection.ConnectionInfo;
 import com.githubcolomboDavide7.tools.AbstractFileManager;
 import com.githubcolomboDavide7.tools.ClientFileManager;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Client implements IClient{
 
@@ -20,11 +21,19 @@ public class Client implements IClient{
         try {
             this.socket = new Socket(ipAddress, portNumber);
             this.clientTool = new ClientFileManager(this.socket.getInetAddress().getHostName() + ".txt");
+            this.clientTool.setConnectionInfoToWrite(getConnectionInfo());
             this.clientTool.writeToOrCreate();
         } catch(IOException e) {
             throw new ConnectException("Error establishing a connection to port number " + portNumber
                                      + "with ip address " + ipAddress);
         }
+    }
+
+    private Map<ConnectionInfo, String> getConnectionInfo() {
+        Map<ConnectionInfo, String> info = new HashMap<>();
+        info.put(ConnectionInfo.IP_ADDRESS, this.socket.getInetAddress().getHostAddress());
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.socket.getPort()));
+        return info;
     }
 
     @Override
@@ -59,6 +68,11 @@ public class Client implements IClient{
     @Override
     public String appendHostNameToPath(String path) {
         return path + this.socket.getInetAddress().getHostName();
+    }
+
+    @Override
+    public List<String> getEstablishedConnections() {
+        return this.clientTool.openAndReadTextFile();
     }
 
     @Override
