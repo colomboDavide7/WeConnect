@@ -6,7 +6,7 @@ import java.util.*;
 import com.githubcolomboDavide7.clientSide.*;
 import com.githubcolomboDavide7.connection.*;
 import com.githubcolomboDavide7.serverSide.ApplicationServer.IApplicationServer;
-import com.githubcolomboDavide7.serverSide.ApplicationServer.Server;
+import com.githubcolomboDavide7.serverSide.ApplicationServer.ApplicationServer;
 import com.githubcolomboDavide7.tools.*;
 
 import org.junit.*;
@@ -21,8 +21,7 @@ public class ClientTest {
     @Before
     public void shouldCreateServer(){
         try {
-            this.myServer = Server.open(remotePort);
-            this.myServer.printHostName();
+            this.myServer = ApplicationServer.getApplicationServer();
         } catch(ConnectException ex) {
             System.out.println(ex.getMessage());
             fail();

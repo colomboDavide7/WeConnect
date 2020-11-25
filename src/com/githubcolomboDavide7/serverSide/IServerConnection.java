@@ -6,4 +6,6 @@ public interface IServerConnection {
 
     void close() throws ConnectException;
 
+    void open() throws ConnectException;
+
 }

@@ -1,5 +1,7 @@
 package com.githubcolomboDavide7.connection;
 
+import com.githubcolomboDavide7.tools.AbstractFileManager;
+
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,6 +21,21 @@ public class DHCPConnection extends AbstractServerConnection {
             e.printStackTrace();
             throw new ConnectException("Unknown host " + this.IP_ADDRESS);
         }
+    }
+
+    @Override
+    public AbstractFileManager getFormatterAssociatedToConnection() {
+        return null;
+    }
+
+    @Override
+    public void closeConnection() throws ConnectException {
+
+    }
+
+    @Override
+    public void openConnection() throws ConnectException {
+
     }
 
     @Override
@@ -45,7 +62,7 @@ public class DHCPConnection extends AbstractServerConnection {
 
     @Override
     public boolean matchIPAddress(String ip) {
-        return ip.equals(super.ipAddress.getHostAddress());
+        return ip.equals(this.IP_ADDRESS);
     }
 
 }

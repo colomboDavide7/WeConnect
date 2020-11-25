@@ -1,23 +1,66 @@
 package com.githubcolomboDavide7.connection;
 
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import com.githubcolomboDavide7.serverSide.ApplicationServer.ClientServerChannel;
+import com.githubcolomboDavide7.tools.*;
 
-public class ApplicationServerConnection extends AbstractServerConnection {
+import java.io.IOException;
+import java.net.*;
+
+public class ApplicationServerConnection extends AbstractServerConnection implements Runnable {
 
     private final int PORT_NUM = 7000;
     private final int MAX_HOST_SUPPORTED = 3;
     private final String IP_ADDRESS = "127.0.0.1";
+    private final ServerSocket serverSocket;
 
     public ApplicationServerConnection() throws ConnectException {
         super();
-        super.portNumber = this.PORT_NUM;
         try {
+            super.portNumber = this.PORT_NUM;
             super.ipAddress = InetAddress.getByName(this.IP_ADDRESS);
+            this.serverSocket = new ServerSocket(this.PORT_NUM, this.MAX_HOST_SUPPORTED, this.ipAddress);
         } catch(UnknownHostException e) {
             e.printStackTrace();
             throw new ConnectException("Unknown host " + this.IP_ADDRESS);
+        } catch(IOException e) {
+            e.printStackTrace();
+            throw new ConnectException("Error opening socket at: " + this.IP_ADDRESS + "with port number " + this.PORT_NUM);
+        }
+    }
+
+    @Override
+    public AbstractFileManager getFormatterAssociatedToConnection() {
+        return new ServerFileManager(this.IP_ADDRESS + ".txt");
+    }
+
+    @Override
+    public void closeConnection() throws ConnectException {
+        try {
+            this.serverSocket.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+            throw new ConnectException("Error closing Application Server socket");
+        }
+    }
+
+    @Override
+    public void openConnection() {
+        new Thread(this).start();
+    }
+
+    @Override
+    public void run() {
+        while(!this.serverSocket.isClosed()){
+            try {
+                Socket client = this.serverSocket.accept();
+                System.out.println("Connection established...");
+
+                new ClientServerChannel(client).start();
+            } catch(ConnectException e) {
+                e.printStackTrace();
+            } catch(IOException e) {
+
+            }
         }
     }
 
@@ -33,7 +76,7 @@ public class ApplicationServerConnection extends AbstractServerConnection {
 
     @Override
     public boolean isClosed() {
-        return false;
+        return this.serverSocket.isClosed();
     }
 
     @Override
@@ -43,7 +86,7 @@ public class ApplicationServerConnection extends AbstractServerConnection {
 
     @Override
     public boolean matchIPAddress(String ip) {
-        return ip.equals(super.ipAddress.getHostAddress());
+        return ip.equals(this.IP_ADDRESS);
     }
 
 }

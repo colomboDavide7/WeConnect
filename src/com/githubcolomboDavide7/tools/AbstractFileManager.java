@@ -8,7 +8,7 @@ import java.util.*;
 public abstract class AbstractFileManager {
 
     protected final String commonPath = "/Users/davidecolombo/Desktop/myGitRepo/WeConnect/";
-    protected Map<ConnectionInfo, String> toWrite = new HashMap<>();
+    protected String toWrite = null;
 
     public static boolean existFile(String filename){
         File f = new File(filename);
@@ -19,7 +19,7 @@ public abstract class AbstractFileManager {
 
     public abstract List<String> openAndReadTextFile();
 
-    public void setConnectionInfoToWrite(Map<ConnectionInfo, String> toWrite){
+    public void setConnectionInfoToWrite(String toWrite){
         this.toWrite = toWrite;
     }
 

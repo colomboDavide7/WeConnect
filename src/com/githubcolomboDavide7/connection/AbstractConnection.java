@@ -1,8 +1,7 @@
 package com.githubcolomboDavide7.connection;
 
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import com.githubcolomboDavide7.tools.*;
+import java.net.*;
 
 public abstract class AbstractConnection {
 
@@ -21,6 +20,12 @@ public abstract class AbstractConnection {
 
     public AbstractConnection() {
     }
+
+    public abstract AbstractFileManager getFormatterAssociatedToConnection();
+
+    public abstract void closeConnection() throws ConnectException;
+
+    public abstract void openConnection() throws ConnectException;
 
     public abstract boolean matchPortNumber(int portNum);
 

@@ -4,8 +4,8 @@ import java.util.*;
 
 public interface IServerInspector {
 
-    void printHostName();
-
     List<String> getEstablishedConnections();
+
+    void log(String toLog);
 
 }

@@ -1,7 +1,5 @@
 package com.githubcolomboDavide7.tools;
 
-import com.githubcolomboDavide7.connection.ConnectionInfo;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +24,7 @@ public class ClientFileManager extends AbstractFileManager {
                     new FileWriter(
                             new File(super.commonPath + this.clientDir + this.filename)
                     ));
-            String toAppend = AbstractFormatter.formatConnectionInfo(super.toWrite);
-            writer.append(toAppend);
+            writer.append(super.toWrite);
             writer.newLine();
             writer.close();
         } catch(IOException e) {

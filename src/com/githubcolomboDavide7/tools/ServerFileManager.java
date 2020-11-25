@@ -24,8 +24,7 @@ public class ServerFileManager extends AbstractFileManager {
                     new FileWriter(
                             new File(super.commonPath + this.dir + this.filename)
                     ));
-            String toAppend = AbstractFormatter.formatConnectionInfo(super.toWrite);
-            writer.append(toAppend);
+            writer.append(super.toWrite);
             writer.newLine();
             writer.close();
         } catch(IOException e) {

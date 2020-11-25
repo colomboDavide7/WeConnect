@@ -2,6 +2,7 @@ package com.githubcolomboDavide7.clientSide;
 
 import com.githubcolomboDavide7.connection.ConnectionInfo;
 import com.githubcolomboDavide7.tools.AbstractFileManager;
+import com.githubcolomboDavide7.tools.AbstractFormatter;
 import com.githubcolomboDavide7.tools.ClientFileManager;
 
 import java.io.*;
@@ -29,11 +30,11 @@ public class Client implements IClient{
         }
     }
 
-    private Map<ConnectionInfo, String> getConnectionInfo() {
+    private String getConnectionInfo() {
         Map<ConnectionInfo, String> info = new HashMap<>();
         info.put(ConnectionInfo.IP_ADDRESS, this.socket.getInetAddress().getHostAddress());
         info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.socket.getPort()));
-        return info;
+        return AbstractFormatter.formatConnectionInfo(info);
     }
 
     @Override
