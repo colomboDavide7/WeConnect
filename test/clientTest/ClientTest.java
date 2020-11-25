@@ -5,7 +5,8 @@ import java.util.*;
 
 import com.githubcolomboDavide7.clientSide.*;
 import com.githubcolomboDavide7.connection.*;
-import com.githubcolomboDavide7.serverSide.*;
+import com.githubcolomboDavide7.serverSide.ApplicationServer.IApplicationServer;
+import com.githubcolomboDavide7.serverSide.ApplicationServer.Server;
 import com.githubcolomboDavide7.tools.*;
 
 import org.junit.*;
@@ -13,7 +14,7 @@ import static org.junit.Assert.*;
 
 public class ClientTest {
 
-    private IServer myServer;
+    private IApplicationServer myServer;
     private final int remotePort = 49899;
     private final String workingDir = "/Users/davidecolombo/Desktop/myGitRepo/WeConnect/knownhost/";
 

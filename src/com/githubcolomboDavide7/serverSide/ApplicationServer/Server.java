@@ -1,4 +1,4 @@
-package com.githubcolomboDavide7.serverSide;
+package com.githubcolomboDavide7.serverSide.ApplicationServer;
 
 import com.githubcolomboDavide7.connection.*;
 import com.githubcolomboDavide7.tools.*;
@@ -7,9 +7,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class Server implements IServer, Runnable {
+public class Server implements IApplicationServer, Runnable {
 
-    public static IServer open(int portNumber) throws ConnectException {
+    public static IApplicationServer open(int portNumber) throws ConnectException {
         return new Server(portNumber);
     }
 
@@ -33,6 +33,7 @@ public class Server implements IServer, Runnable {
     public void run() {
         while(!this.serverSocket.isClosed()){
             try {
+                System.out.println("ready to accept another client...");
                 Socket client = this.serverSocket.accept();
                 this.serverFileManager.setConnectionInfoToWrite(createConnectionInfo(client));
                 this.serverFileManager.writeToOrCreate();
@@ -41,7 +42,6 @@ public class Server implements IServer, Runnable {
                 e.printStackTrace();
             }
         }
-
     }
 
     private Map<ConnectionInfo, String> createConnectionInfo(Socket client){

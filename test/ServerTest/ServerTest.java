@@ -3,10 +3,12 @@ package ServerTest;
 import com.githubcolomboDavide7.clientSide.Client;
 import com.githubcolomboDavide7.clientSide.IClient;
 import com.githubcolomboDavide7.connection.*;
-import com.githubcolomboDavide7.serverSide.*;
+
 import java.net.*;
 import java.util.*;
 
+import com.githubcolomboDavide7.serverSide.ApplicationServer.IApplicationServer;
+import com.githubcolomboDavide7.serverSide.ApplicationServer.Server;
 import com.githubcolomboDavide7.tools.AbstractFormatter;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -20,7 +22,7 @@ public class ServerTest {
     public void shouldCreateServer(){
         System.out.println("* Server test: shouldCreateServer()\n");
         try {
-            IServer s = Server.open(remotePort);
+            IApplicationServer s = Server.open(remotePort);
             assertTrue(s.matchPortNumber(remotePort));
             s.close();
         }catch(ConnectException ex){
@@ -43,7 +45,7 @@ public class ServerTest {
     public void shouldCreateServerConnectionFile(){
         System.out.println("* Server test: shouldCreateServerConnectionFile()\n");
         try {
-            IServer s = Server.open(remotePort);                                // open
+            IApplicationServer s = Server.open(remotePort);                                // open
             String expected = "IP_ADDRESS=127.0.0.1,PORT_NUMBER=49899";
             IClient c = Client.open("127.0.0.1", this.remotePort);
             List<String> serverConnections = s.getEstablishedConnections();
@@ -53,7 +55,6 @@ public class ServerTest {
             System.out.println(ex.getMessage());
             fail();
         }
-
     }
 
 }
