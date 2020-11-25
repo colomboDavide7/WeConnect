@@ -1,13 +1,9 @@
-package com.githubcolomboDavide7.clientSide;
+package com.githubcolomboDavide7.client;
 
 public interface IClientComparable {
 
     boolean matchPortNumber(int portNumber);
 
     boolean matchIPAddress(String ip);
-
-    boolean isBound();
-
-    boolean isConnected();
 
 }

@@ -1,4 +1,4 @@
-package com.githubcolomboDavide7.serverSide.ApplicationServer;
+package com.githubcolomboDavide7.channel;
 
 import com.githubcolomboDavide7.connection.*;
 import com.githubcolomboDavide7.tools.*;
@@ -9,12 +9,12 @@ import java.util.Map;
 public class ClientServerChannel extends Thread {
 
     private final Socket clientSocket;
-    private IApplicationServer appServer;
 
-    public ClientServerChannel(Socket clientSocket) throws ConnectException {
+    public ClientServerChannel(AbstractConnection conn, Socket clientSocket) throws ConnectException {
         this.clientSocket = clientSocket;
-        this.appServer = ApplicationServer.getApplicationServer();
-        this.appServer.log(createConnectionInfo());
+        AbstractFileManager fileManager = conn.getFileManagerAssociatedToConnection();
+        fileManager.setConnectionInfoToWrite(createConnectionInfo());
+        fileManager.writeToOrCreate();
     }
 
     private String createConnectionInfo(){
@@ -27,6 +27,7 @@ public class ClientServerChannel extends Thread {
     @Override
     public void run(){
         // TODO - starting communicating with client
+        System.out.println("Channel is open...");
     }
 
 }

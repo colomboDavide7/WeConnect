@@ -12,4 +12,8 @@ public class ConnectionFactory {
         return new ApplicationServerConnection();
     }
 
+    public static AbstractClientConnection getClientConnection(String ip, int portNum) throws ConnectException{
+        return new ClientConnection(ip, portNum);
+    }
+
 }

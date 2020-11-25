@@ -24,7 +24,7 @@ public class DHCPConnection extends AbstractServerConnection {
     }
 
     @Override
-    public AbstractFileManager getFormatterAssociatedToConnection() {
+    public AbstractFileManager getFileManagerAssociatedToConnection() {
         return null;
     }
 

@@ -1,12 +1,12 @@
 package com.githubcolomboDavide7.connection;
 
-import com.githubcolomboDavide7.serverSide.ApplicationServer.ClientServerChannel;
+import com.githubcolomboDavide7.channel.ClientServerChannel;
 import com.githubcolomboDavide7.tools.*;
 
 import java.io.IOException;
 import java.net.*;
 
-public class ApplicationServerConnection extends AbstractServerConnection implements Runnable {
+public class ApplicationServerConnection extends AbstractServerConnection {
 
     private final int PORT_NUM = 7000;
     private final int MAX_HOST_SUPPORTED = 3;
@@ -29,7 +29,7 @@ public class ApplicationServerConnection extends AbstractServerConnection implem
     }
 
     @Override
-    public AbstractFileManager getFormatterAssociatedToConnection() {
+    public AbstractFileManager getFileManagerAssociatedToConnection() {
         return new ServerFileManager(this.IP_ADDRESS + ".txt");
     }
 
@@ -45,22 +45,14 @@ public class ApplicationServerConnection extends AbstractServerConnection implem
 
     @Override
     public void openConnection() {
-        new Thread(this).start();
-    }
-
-    @Override
-    public void run() {
-        while(!this.serverSocket.isClosed()){
-            try {
-                Socket client = this.serverSocket.accept();
-                System.out.println("Connection established...");
-
-                new ClientServerChannel(client).start();
-            } catch(ConnectException e) {
-                e.printStackTrace();
-            } catch(IOException e) {
-
-            }
+        try {
+            Socket client = this.serverSocket.accept();
+            System.out.println("Connection established...");
+            new ClientServerChannel(this, client).start();
+        } catch(ConnectException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            //
         }
     }
 

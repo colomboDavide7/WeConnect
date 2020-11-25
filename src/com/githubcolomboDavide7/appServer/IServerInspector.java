@@ -1,11 +1,9 @@
-package com.githubcolomboDavide7.serverSide;
+package com.githubcolomboDavide7.appServer;
 
 import java.util.*;
 
 public interface IServerInspector {
 
     List<String> getEstablishedConnections();
-
-    void log(String toLog);
 
 }

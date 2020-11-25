@@ -1,12 +1,12 @@
-package com.githubcolomboDavide7.serverSide.ApplicationServer;
+package com.githubcolomboDavide7.appServer;
 
 import com.githubcolomboDavide7.connection.*;
-import com.githubcolomboDavide7.tools.*;
+import com.githubcolomboDavide7.tools.AbstractFileManager;
 
 import java.net.*;
 import java.util.*;
 
-public class ApplicationServer implements IApplicationServer {
+public class ApplicationServer implements IApplicationServer, Runnable {
 
     private static IApplicationServer TheServer = null;
 
@@ -17,11 +17,11 @@ public class ApplicationServer implements IApplicationServer {
     }
 
     private final AbstractServerConnection myConn;
-    private final AbstractFileManager serverFileManager;
+    private final AbstractFileManager fileManager;
 
     private ApplicationServer() throws ConnectException {
         this.myConn = ConnectionFactory.getApplicationServerConnection();
-        this.serverFileManager = myConn.getFormatterAssociatedToConnection();
+        this.fileManager = myConn.getFileManagerAssociatedToConnection();
     }
 
     @Override
@@ -36,13 +36,7 @@ public class ApplicationServer implements IApplicationServer {
 
     @Override
     public List<String> getEstablishedConnections() {
-        return this.serverFileManager.openAndReadTextFile();
-    }
-
-    @Override
-    public void log(String toLog) {
-        this.serverFileManager.setConnectionInfoToWrite(toLog);
-        this.serverFileManager.writeToOrCreate();
+        return this.fileManager.openAndReadTextFile();
     }
 
     @Override
@@ -51,8 +45,20 @@ public class ApplicationServer implements IApplicationServer {
     }
 
     @Override
-    public void open() throws ConnectException {
-        myConn.openConnection();
+    public void open() {
+        new Thread(this).start();
+    }
+
+    @Override
+    public void run() {
+        while(!this.myConn.isClosed()) {
+            try {
+                this.myConn.openConnection();
+            } catch(ConnectException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
 }

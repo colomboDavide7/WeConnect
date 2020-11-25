@@ -1,4 +1,4 @@
-package com.githubcolomboDavide7.clientSide;
+package com.githubcolomboDavide7.client;
 
 import java.net.*;
 import java.util.*;

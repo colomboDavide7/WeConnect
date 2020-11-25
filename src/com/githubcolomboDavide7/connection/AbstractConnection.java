@@ -21,7 +21,7 @@ public abstract class AbstractConnection {
     public AbstractConnection() {
     }
 
-    public abstract AbstractFileManager getFormatterAssociatedToConnection();
+    public abstract AbstractFileManager getFileManagerAssociatedToConnection();
 
     public abstract void closeConnection() throws ConnectException;
 

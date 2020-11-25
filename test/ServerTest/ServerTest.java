@@ -1,14 +1,14 @@
 package ServerTest;
 
-import com.githubcolomboDavide7.clientSide.Client;
-import com.githubcolomboDavide7.clientSide.IClient;
+import com.githubcolomboDavide7.client.Client;
+import com.githubcolomboDavide7.client.IClient;
 import com.githubcolomboDavide7.connection.*;
 
 import java.net.*;
 import java.util.*;
 
-import com.githubcolomboDavide7.serverSide.ApplicationServer.IApplicationServer;
-import com.githubcolomboDavide7.serverSide.ApplicationServer.ApplicationServer;
+import com.githubcolomboDavide7.appServer.IApplicationServer;
+import com.githubcolomboDavide7.appServer.ApplicationServer;
 import com.githubcolomboDavide7.tools.AbstractFormatter;
 import org.junit.*;
 import static org.junit.Assert.*;

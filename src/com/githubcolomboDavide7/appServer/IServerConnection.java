@@ -1,4 +1,4 @@
-package com.githubcolomboDavide7.serverSide;
+package com.githubcolomboDavide7.appServer;
 
 import java.net.ConnectException;
 
