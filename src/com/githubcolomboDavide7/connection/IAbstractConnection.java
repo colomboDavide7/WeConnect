@@ -1,14 +1,13 @@
 package com.githubcolomboDavide7.connection;
 
-import com.githubcolomboDavide7.tools.AbstractFileManager;
-
-import java.net.ConnectException;
+import com.githubcolomboDavide7.tools.*;
+import java.net.*;
 
 public interface IAbstractConnection {
 
-    AbstractFileManager getFileManagerAssociatedToConnection();
+    AbstractLogger getFileManagerAssociatedToConnection();
 
-    String getConnectionInfo();
+    String getConnectionInfo(Socket clientSocket);
 
     void closeConnection() throws ConnectException;
 

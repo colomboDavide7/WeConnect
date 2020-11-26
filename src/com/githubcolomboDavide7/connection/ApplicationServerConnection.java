@@ -15,15 +15,15 @@ public class ApplicationServerConnection extends AbstractServerConnection {
     }
 
     @Override
-    public AbstractFileManager getFileManagerAssociatedToConnection() {
-        return super.fileManager;
+    public AbstractLogger getFileManagerAssociatedToConnection() {
+        return super.logger;
     }
 
     @Override
-    public String getConnectionInfo() {
+    public String getConnectionInfo(Socket clientSocket) {
         Map<ConnectionInfo, String> info = new HashMap<>();
-        info.put(ConnectionInfo.IP_ADDRESS, super.properties.IPAddress);
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.properties.portNumber));
+        info.put(ConnectionInfo.IP_ADDRESS, clientSocket.getInetAddress().getHostAddress());
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(clientSocket.getLocalPort()));
         return AbstractFormatter.formatConnectionInfo(info);
     }
 
@@ -43,8 +43,9 @@ public class ApplicationServerConnection extends AbstractServerConnection {
             System.out.println("[SERVER] Waiting for clients...");
             Socket clientSocket = this.serverSocket.accept();
             System.out.println("[SERVER] Client accepted...");
-            AbstractClientConnection clientConn = ConnectionFactory.getClientConnection(clientSocket);
-            super.pool.execute(new ClientServerChannel(this, clientConn));
+            super.pool.execute(new ClientServerChannel(clientSocket));
+            super.logger.setConnectionInfoToWrite(this.getConnectionInfo(clientSocket));
+            super.logger.writeToOrCreate();
         } catch(ConnectException e) {
             e.printStackTrace();
         } catch(IOException e) {

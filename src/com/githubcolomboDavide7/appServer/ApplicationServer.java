@@ -1,7 +1,7 @@
 package com.githubcolomboDavide7.appServer;
 
 import com.githubcolomboDavide7.connection.*;
-import com.githubcolomboDavide7.tools.AbstractFileManager;
+import com.githubcolomboDavide7.tools.AbstractLogger;
 
 import java.net.*;
 import java.util.*;
@@ -17,11 +17,11 @@ public class ApplicationServer implements IApplicationServer, Runnable {
     }
 
     private final AbstractServerConnection myConn;
-    private final AbstractFileManager fileManager;
+    private final AbstractLogger logger;
 
     private ApplicationServer() throws ConnectException {
         this.myConn = ConnectionFactory.getServiceConnection("app_server");
-        this.fileManager = myConn.getFileManagerAssociatedToConnection();
+        this.logger = myConn.getFileManagerAssociatedToConnection();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ApplicationServer implements IApplicationServer, Runnable {
 
     @Override
     public List<String> getEstablishedConnections() {
-        return this.fileManager.openAndReadTextFile();
+        return this.logger.openAndReadTextFile();
     }
 
     @Override

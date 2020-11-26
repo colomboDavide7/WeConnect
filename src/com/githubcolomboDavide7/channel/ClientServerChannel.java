@@ -1,21 +1,11 @@
 package com.githubcolomboDavide7.channel;
 
-import com.githubcolomboDavide7.connection.*;
-import com.githubcolomboDavide7.tools.*;
+import java.net.*;
 
-public class ClientServerChannel extends Thread {
+public class ClientServerChannel extends AbstractChannel {
 
-    private AbstractClientConnection clientConn;
-    private AbstractServerConnection serverConn;
-
-    public ClientServerChannel(
-            AbstractServerConnection serverConnection, AbstractClientConnection clientConn)
-    {
-        this.clientConn = clientConn;
-        this.serverConn = serverConnection;
-        AbstractFileManager serverFileManager = serverConnection.getFileManagerAssociatedToConnection();
-        serverFileManager.setConnectionInfoToWrite(clientConn.getConnectionInfo());
-        serverFileManager.writeToOrCreate();
+    public ClientServerChannel(Socket clientSocket) throws ConnectException {
+        super(clientSocket);
     }
 
     @Override

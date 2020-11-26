@@ -1,6 +1,9 @@
 package com.githubcolomboDavide7.connection;
 
+import com.githubcolomboDavide7.channel.ClientServerChannel;
 import com.githubcolomboDavide7.tools.*;
+
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
@@ -11,15 +14,15 @@ public class DHCPConnection extends AbstractServerConnection {
     }
 
     @Override
-    public AbstractFileManager getFileManagerAssociatedToConnection() {
-        return null;
+    public AbstractLogger getFileManagerAssociatedToConnection() {
+        return super.logger;
     }
 
     @Override
-    public String getConnectionInfo() {
+    public String getConnectionInfo(Socket clientSocket) {
         Map<ConnectionInfo, String> info = new HashMap<>();
-        info.put(ConnectionInfo.IP_ADDRESS, super.properties.IPAddress);
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.properties.portNumber));
+        info.put(ConnectionInfo.IP_ADDRESS, clientSocket.getInetAddress().getHostAddress());
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(clientSocket.getPort()));
         return AbstractFormatter.formatConnectionInfo(info);
     }
 
@@ -30,7 +33,18 @@ public class DHCPConnection extends AbstractServerConnection {
 
     @Override
     public void openConnection() throws ConnectException {
-
+        try {
+            System.out.println("[DHCP] Waiting for clients...");
+            Socket clientSocket = this.serverSocket.accept();
+            System.out.println("[DHCP] Client accepted...");
+            super.logger.setConnectionInfoToWrite(getConnectionInfo(clientSocket));
+            super.logger.writeToOrCreate();
+            super.pool.execute(new ClientServerChannel(clientSocket));
+        } catch(ConnectException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            //
+        }
     }
 
     @Override

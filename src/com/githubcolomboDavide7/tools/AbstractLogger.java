@@ -3,7 +3,7 @@ package com.githubcolomboDavide7.tools;
 import java.io.*;
 import java.util.*;
 
-public abstract class AbstractFileManager {
+public abstract class AbstractLogger {
 
     protected final String commonPath = "/Users/davidecolombo/Desktop/myGitRepo/WeConnect/";
     protected String toWrite = null;

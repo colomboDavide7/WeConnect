@@ -4,13 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerFileManager extends AbstractFileManager {
+public class ServerLogger extends AbstractLogger {
 
     private final String dir = "knownserver/";
     private final String filename;
     private boolean exist = false;
 
-    public ServerFileManager(String filename){
+    public ServerLogger(String filename){
         super();
         this.filename = filename;
     }

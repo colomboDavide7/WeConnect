@@ -12,7 +12,7 @@ public class Client implements IClient{
     }
 
     private final AbstractClientConnection myConn;
-    private final AbstractFileManager fileManager;
+    private final AbstractLogger fileManager;
 
     private Client(String ipAddress, int portNumber) throws ConnectException {
         this.myConn = ConnectionFactory.getClientConnection(ipAddress, portNumber);

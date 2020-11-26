@@ -22,15 +22,15 @@ public class ClientConnection extends AbstractClientConnection {
     }
 
     @Override
-    public AbstractFileManager getFileManagerAssociatedToConnection() {
+    public AbstractLogger getFileManagerAssociatedToConnection() {
         return super.fileManager;
     }
 
     @Override
-    public String getConnectionInfo() {
+    public String getConnectionInfo(Socket clientSocket) {
         Map<ConnectionInfo, String> info = new HashMap<>();
-        info.put(ConnectionInfo.IP_ADDRESS, super.socket.getInetAddress().getHostAddress());
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.serverPort));
+        info.put(ConnectionInfo.IP_ADDRESS, clientSocket.getInetAddress().getHostAddress());
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(clientSocket.getPort()));
         return AbstractFormatter.formatConnectionInfo(info);
     }
 
