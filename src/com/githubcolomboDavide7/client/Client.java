@@ -7,8 +7,12 @@ import java.util.*;
 
 public class Client implements IClient{
 
-    public static IClient create(String ipAddress, int portNumber) throws ConnectException {
+    public static IClient connect(String ipAddress, int portNumber) throws ConnectException {
         return new Client(ipAddress, portNumber);
+    }
+
+    public static IClient connect(KnownServer server) throws ConnectException {
+        return new Client(server.IPAddress, server.portNumber);
     }
 
     private final AbstractClientConnection myConn;

@@ -49,7 +49,7 @@ public class ServerTest {
             s.open();                                                           // open
             System.out.println("Opened");
             String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
-            IClient c = Client.create("127.0.0.2", this.remotePort);
+            IClient c = Client.connect("127.0.0.2", this.remotePort);
             List<String> serverConnections = s.getEstablishedConnections();
             assertEquals(expected, serverConnections.get(0));
             s.close();                                                          // close
@@ -67,9 +67,9 @@ public class ServerTest {
             s.open();                                                           // open the server
             System.out.println("Opened");
             String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
-            IClient c = Client.create("127.0.0.2", this.remotePort);
+            IClient c = Client.connect("127.0.0.2", this.remotePort);
             c.open();
-            IClient c1 = Client.create("127.0.0.2", this.remotePort);
+            IClient c1 = Client.connect("127.0.0.2", this.remotePort);
             c1.open();
             List<String> serverConnections = s.getEstablishedConnections();
             assertEquals(2, serverConnections.size());

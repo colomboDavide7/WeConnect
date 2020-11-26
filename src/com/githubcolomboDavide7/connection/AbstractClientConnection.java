@@ -1,11 +1,8 @@
 package com.githubcolomboDavide7.connection;
 
-import com.githubcolomboDavide7.tools.AbstractLogger;
-import com.githubcolomboDavide7.tools.ClientLogger;
-
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.Socket;
+import com.githubcolomboDavide7.tools.*;
+import java.io.*;
+import java.net.*;
 
 public abstract class AbstractClientConnection implements IAbstractConnection {
 

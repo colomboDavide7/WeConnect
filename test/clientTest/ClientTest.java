@@ -33,7 +33,7 @@ public class ClientTest {
         System.out.println("* Client test: shouldCreateClient()\n");
         String ipAddress = "127.0.0.2";
         try {
-            IClient c = Client.create(ipAddress, this.remotePort);    // open
+            IClient c = Client.connect(ipAddress, this.remotePort);    // open
             assertTrue(c.matchIPAddress(ipAddress));
             assertTrue(c.matchPortNumber(this.remotePort));
             c.close();                                              // close
@@ -48,7 +48,7 @@ public class ClientTest {
         System.out.println("* Client test: shouldFormatClientConnectionInfo()\n");
         String ipAddress = "127.0.0.2";
         try {
-            IClient c = Client.create(ipAddress, this.remotePort);    // open
+            IClient c = Client.connect(ipAddress, this.remotePort);    // open
             String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
             Map<ConnectionInfo, String> info = new HashMap<>();
             info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.remotePort));
@@ -66,7 +66,7 @@ public class ClientTest {
         System.out.println("* Client test: shouldWriteClientConnectionInfoToFile()\n");
         String ipAddress = "127.0.0.2";
         try {
-            IClient c = Client.create(ipAddress, this.remotePort);
+            IClient c = Client.connect(ipAddress, this.remotePort);
             c.open();                                               // open
             String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
             List<String> lines = c.getEstablishedConnections();
