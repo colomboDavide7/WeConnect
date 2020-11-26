@@ -8,6 +8,7 @@ public class ServerFileManager extends AbstractFileManager {
 
     private final String dir = "knownserver/";
     private final String filename;
+    private boolean exist = false;
 
     public ServerFileManager(String filename){
         super();
@@ -16,19 +17,23 @@ public class ServerFileManager extends AbstractFileManager {
 
     @Override
     public void writeToOrCreate() {
-        if(super.toWrite.isEmpty())
+        if(super.toWrite == null)
             return;
 
         try {
-            BufferedWriter writer = new BufferedWriter(
-                    new FileWriter(
-                            new File(super.commonPath + this.dir + this.filename)
-                    ));
+            PrintWriter writer = new PrintWriter(new FileWriter(
+                            new File(super.commonPath + this.dir + filename), exist));
             writer.append(super.toWrite);
-            writer.newLine();
+            writer.append("\n");
+            writer.flush();
             writer.close();
+            if(!exist)
+                exist = true;
+
         } catch(IOException e) {
-            e.printStackTrace();
+            System.out.println("Error log Server connections...");
+            System.out.println("Quitting JVM!");
+            System.exit(-1);
         }
     }
 

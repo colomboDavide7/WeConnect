@@ -1,7 +1,5 @@
 package com.githubcolomboDavide7.tools;
 
-import com.githubcolomboDavide7.connection.ConnectionInfo;
-
 import java.io.*;
 import java.util.*;
 

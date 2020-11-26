@@ -48,11 +48,34 @@ public class ServerTest {
             IApplicationServer s = ApplicationServer.getApplicationServer();
             s.open();                                                           // open
             System.out.println("Opened");
-            String expected = "IP_ADDRESS=127.0.0.1,PORT_NUMBER=7000";
-            IClient c = Client.open("127.0.0.1", this.remotePort);
+            String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
+            IClient c = Client.create("127.0.0.2", this.remotePort);
             List<String> serverConnections = s.getEstablishedConnections();
             assertEquals(expected, serverConnections.get(0));
             s.close();                                                          // close
+        }catch(ConnectException ex){
+            System.out.println(ex.getMessage());
+            fail();
+        }
+    }
+
+    @Test
+    public void shouldAcceptMultipleHost(){
+        System.out.println("* Server test: shouldAcceptMultipleHost()\n");
+        try {
+            IApplicationServer s = ApplicationServer.getApplicationServer();
+            s.open();                                                           // open the server
+            System.out.println("Opened");
+            String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
+            IClient c = Client.create("127.0.0.2", this.remotePort);
+            c.open();
+            IClient c1 = Client.create("127.0.0.2", this.remotePort);
+            c1.open();
+            List<String> serverConnections = s.getEstablishedConnections();
+            assertEquals(2, serverConnections.size());
+            assertEquals(expected, serverConnections.get(0));
+            assertEquals(expected, serverConnections.get(1));
+            s.close();                                                          // close the server
         }catch(ConnectException ex){
             System.out.println(ex.getMessage());
             fail();

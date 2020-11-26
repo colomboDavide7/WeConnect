@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Client implements IClient{
 
-    public static IClient open(String ipAddress, int portNumber) throws ConnectException {
+    public static IClient create(String ipAddress, int portNumber) throws ConnectException {
         return new Client(ipAddress, portNumber);
     }
 
@@ -32,6 +32,11 @@ public class Client implements IClient{
     @Override
     public void close() throws ConnectException {
         this.myConn.closeConnection();
+    }
+
+    @Override
+    public void open() throws ConnectException {
+        this.myConn.openConnection();
     }
 
     @Override

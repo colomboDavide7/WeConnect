@@ -2,8 +2,7 @@ package com.githubcolomboDavide7.connection;
 
 import com.githubcolomboDavide7.tools.*;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DHCPConnection extends AbstractServerConnection {
 
@@ -37,6 +36,11 @@ public class DHCPConnection extends AbstractServerConnection {
     @Override
     public boolean matchMaxSupportedHost(int maxHost) {
         return maxHost == super.properties.maxHost;
+    }
+
+    @Override
+    public boolean matchServer(KnownServer serverProp) {
+        return serverProp == KnownServer.DHCP;
     }
 
     @Override

@@ -31,9 +31,9 @@ public class ClientTest {
     @Test
     public void shouldCreateClient(){
         System.out.println("* Client test: shouldCreateClient()\n");
-        String ipAddress = "127.0.0.1";
+        String ipAddress = "127.0.0.2";
         try {
-            IClient c = Client.open(ipAddress, this.remotePort);    // open
+            IClient c = Client.create(ipAddress, this.remotePort);    // open
             assertTrue(c.matchIPAddress(ipAddress));
             assertTrue(c.matchPortNumber(this.remotePort));
             c.close();                                              // close
@@ -46,10 +46,10 @@ public class ClientTest {
     @Test
     public void shouldFormatClientConnectionInfo(){
         System.out.println("* Client test: shouldFormatClientConnectionInfo()\n");
-        String ipAddress = "127.0.0.1";
+        String ipAddress = "127.0.0.2";
         try {
-            IClient c = Client.open(ipAddress, this.remotePort);    // open
-            String expected = "IP_ADDRESS=127.0.0.1,PORT_NUMBER=7000";
+            IClient c = Client.create(ipAddress, this.remotePort);    // open
+            String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
             Map<ConnectionInfo, String> info = new HashMap<>();
             info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.remotePort));
             info.put(ConnectionInfo.IP_ADDRESS, ipAddress);
@@ -64,10 +64,11 @@ public class ClientTest {
     @Test
     public void shouldWriteClientConnectionInfoToFile(){
         System.out.println("* Client test: shouldWriteClientConnectionInfoToFile()\n");
-        String ipAddress = "127.0.0.1";
+        String ipAddress = "127.0.0.2";
         try {
-            IClient c = Client.open(ipAddress, this.remotePort);    // open
-            String expected = "IP_ADDRESS=127.0.0.1,PORT_NUMBER=7000";
+            IClient c = Client.create(ipAddress, this.remotePort);
+            c.open();                                               // open
+            String expected = "IP_ADDRESS=127.0.0.2,PORT_NUMBER=7000";
             List<String> lines = c.getEstablishedConnections();
             assertEquals(1, lines.size());
             assertEquals(expected, lines.get(0));

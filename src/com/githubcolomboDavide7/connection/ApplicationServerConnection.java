@@ -16,7 +16,7 @@ public class ApplicationServerConnection extends AbstractServerConnection {
 
     @Override
     public AbstractFileManager getFileManagerAssociatedToConnection() {
-        return new ServerFileManager(super.properties.IPAddress + ".txt");
+        return super.fileManager;
     }
 
     @Override
@@ -40,10 +40,11 @@ public class ApplicationServerConnection extends AbstractServerConnection {
     @Override
     public void openConnection() {
         try {
+            System.out.println("[SERVER] Waiting for clients...");
             Socket clientSocket = this.serverSocket.accept();
-            System.out.println("Connection established...");
+            System.out.println("[SERVER] Client accepted...");
             AbstractClientConnection clientConn = ConnectionFactory.getClientConnection(clientSocket);
-            new ClientServerChannel(this, clientConn).start();
+            super.pool.execute(new ClientServerChannel(this, clientConn));
         } catch(ConnectException e) {
             e.printStackTrace();
         } catch(IOException e) {
@@ -54,6 +55,11 @@ public class ApplicationServerConnection extends AbstractServerConnection {
     @Override
     public boolean matchMaxSupportedHost(int maxHost) {
         return maxHost == super.properties.maxHost;
+    }
+
+    @Override
+    public boolean matchServer(KnownServer serverProp) {
+        return serverProp == KnownServer.APP_SERVER;
     }
 
     @Override

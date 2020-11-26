@@ -8,6 +8,7 @@ public class ClientFileManager extends AbstractFileManager {
 
     private final String clientDir = "knownhost/";
     private final String filename;
+    private boolean exist = false;
 
     public ClientFileManager(String filename){
         super();
@@ -20,13 +21,17 @@ public class ClientFileManager extends AbstractFileManager {
             return;
 
         try {
-            BufferedWriter writer = new BufferedWriter(
+            PrintWriter writer = new PrintWriter(
                     new FileWriter(
-                            new File(super.commonPath + this.clientDir + this.filename)
-                    ));
+                            new File(super.commonPath + this.clientDir + this.filename), exist));
             writer.append(super.toWrite);
-            writer.newLine();
+            writer.append("\n");
+            writer.flush();
             writer.close();
+
+            if(!exist)
+                exist = true;
+
         } catch(IOException e) {
             e.printStackTrace();
         }

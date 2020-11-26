@@ -15,11 +15,11 @@ public class ConnectionTest {
         // APPLICATION SERVER
         KnownServer appServer = KnownServer.get("app_server");
         assertEquals(7000, appServer.portNumber);
-        assertEquals("127.0.0.1", appServer.IPAddress);
+        assertEquals("127.0.0.2", appServer.IPAddress);
         // DYNAMIC HOST CONFIGURATION PROTOCOL
         KnownServer dhcp = KnownServer.get("dhcp");
         assertEquals(5000, dhcp.portNumber);
-        assertEquals("127.0.0.1", dhcp.IPAddress);
+        assertEquals("127.0.0.4", dhcp.IPAddress);
         // PROXY
         KnownServer proxy = KnownServer.get("proxy");
         assertEquals(4000, proxy.portNumber);

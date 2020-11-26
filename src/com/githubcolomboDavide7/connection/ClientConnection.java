@@ -1,6 +1,5 @@
 package com.githubcolomboDavide7.connection;
 
-import com.githubcolomboDavide7.channel.*;
 import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
@@ -19,19 +18,19 @@ public class ClientConnection extends AbstractClientConnection {
 
     @Override
     public String appendHostName(String path) {
-        return path + this.socket.getInetAddress().getHostName();
+        return path + this.socket.getInetAddress().getHostAddress();
     }
 
     @Override
     public AbstractFileManager getFileManagerAssociatedToConnection() {
-        return new ClientFileManager(this.socket.getInetAddress().getHostName() + ".txt");
+        return super.fileManager;
     }
 
     @Override
     public String getConnectionInfo() {
         Map<ConnectionInfo, String> info = new HashMap<>();
         info.put(ConnectionInfo.IP_ADDRESS, super.socket.getInetAddress().getHostAddress());
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.socket.getLocalPort()));
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.serverPort));
         return AbstractFormatter.formatConnectionInfo(info);
     }
 
@@ -47,8 +46,8 @@ public class ClientConnection extends AbstractClientConnection {
 
     @Override
     public void openConnection() throws ConnectException {
-        AbstractServerConnection serverConn = ConnectionFactory.getServiceConnection("app_server");
-        new ClientServerChannel(this, serverConn).start();
+        //AbstractServerConnection serverConn = ConnectionFactory.getServiceConnection("app_server");
+        //new ClientServerChannel(serverConn, this).start();
     }
 
     @Override
@@ -60,4 +59,5 @@ public class ClientConnection extends AbstractClientConnection {
     public boolean matchIPAddress(String ip) {
         return ip.equals(super.socket.getInetAddress().getHostAddress());
     }
+
 }
