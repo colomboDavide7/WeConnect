@@ -8,20 +8,27 @@ import java.util.Map;
 
 public class ClientServerChannel extends Thread {
 
-    private final Socket clientSocket;
+    private final AbstractClientConnection clientConn;
+    private final AbstractServerConnection serverConn;
 
-    public ClientServerChannel(AbstractConnection conn, Socket clientSocket) throws ConnectException {
-        this.clientSocket = clientSocket;
-        AbstractFileManager fileManager = conn.getFileManagerAssociatedToConnection();
-        fileManager.setConnectionInfoToWrite(createConnectionInfo());
+    public ClientServerChannel(
+            AbstractServerConnection serverConnection, AbstractClientConnection clientConn)
+    {
+        this.clientConn = clientConn;
+        this.serverConn = serverConnection;
+        AbstractFileManager fileManager = serverConnection.getFileManagerAssociatedToConnection();
+        fileManager.setConnectionInfoToWrite(clientConn.getConnectionInfo());
         fileManager.writeToOrCreate();
     }
 
-    private String createConnectionInfo(){
-        Map<ConnectionInfo, String> info = new HashMap<>();
-        info.put(ConnectionInfo.IP_ADDRESS, clientSocket.getInetAddress().getHostAddress());
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(this.clientSocket.getLocalPort()));
-        return AbstractFormatter.formatConnectionInfo(info);
+    public ClientServerChannel(
+            AbstractClientConnection clientConn, AbstractServerConnection serverConnection)
+    {
+        this.clientConn = clientConn;
+        this.serverConn = serverConnection;
+        AbstractFileManager fileManager = clientConn.getFileManagerAssociatedToConnection();
+        fileManager.setConnectionInfoToWrite(serverConnection.getConnectionInfo());
+        fileManager.writeToOrCreate();
     }
 
     @Override

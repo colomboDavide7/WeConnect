@@ -20,7 +20,7 @@ public class ApplicationServer implements IApplicationServer, Runnable {
     private final AbstractFileManager fileManager;
 
     private ApplicationServer() throws ConnectException {
-        this.myConn = ConnectionFactory.getApplicationServerConnection();
+        this.myConn = ConnectionFactory.getServiceConnection("app_server");
         this.fileManager = myConn.getFileManagerAssociatedToConnection();
     }
 

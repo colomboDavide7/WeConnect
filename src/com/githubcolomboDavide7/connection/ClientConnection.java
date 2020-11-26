@@ -4,19 +4,17 @@ import com.githubcolomboDavide7.channel.*;
 import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ClientConnection extends AbstractClientConnection{
-
-    private final Socket socket;
+public class ClientConnection extends AbstractClientConnection {
 
     public ClientConnection(String validIP, int portNum) throws ConnectException {
         super(validIP, portNum);
-        try {
-            this.socket = new Socket(validIP, portNum);
-        } catch(IOException e) {
-            e.printStackTrace();
-            throw new ConnectException("Error opening Client Socket at: " + validIP + " with port number " + portNum);
-        }
+    }
+
+    public ClientConnection(Socket clientSocket){
+        super(clientSocket);
     }
 
     @Override
@@ -27,6 +25,14 @@ public class ClientConnection extends AbstractClientConnection{
     @Override
     public AbstractFileManager getFileManagerAssociatedToConnection() {
         return new ClientFileManager(this.socket.getInetAddress().getHostName() + ".txt");
+    }
+
+    @Override
+    public String getConnectionInfo() {
+        Map<ConnectionInfo, String> info = new HashMap<>();
+        info.put(ConnectionInfo.IP_ADDRESS, super.socket.getInetAddress().getHostAddress());
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.socket.getLocalPort()));
+        return AbstractFormatter.formatConnectionInfo(info);
     }
 
     @Override
@@ -41,16 +47,17 @@ public class ClientConnection extends AbstractClientConnection{
 
     @Override
     public void openConnection() throws ConnectException {
-        new ClientServerChannel(this, this.socket).start();
+        AbstractServerConnection serverConn = ConnectionFactory.getServiceConnection("app_server");
+        new ClientServerChannel(this, serverConn).start();
     }
 
     @Override
     public boolean matchPortNumber(int portNum) {
-        return portNum == super.portNumber;
+        return portNum == super.socket.getPort();
     }
 
     @Override
     public boolean matchIPAddress(String ip) {
-        return ip.equals(super.ipAddress.getHostAddress());
+        return ip.equals(super.socket.getInetAddress().getHostAddress());
     }
 }

@@ -1,36 +1,30 @@
 package com.githubcolomboDavide7.connection;
 
-import com.githubcolomboDavide7.channel.ClientServerChannel;
+import com.githubcolomboDavide7.channel.*;
 import com.githubcolomboDavide7.tools.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ApplicationServerConnection extends AbstractServerConnection {
 
-    private final int PORT_NUM = 7000;
-    private final int MAX_HOST_SUPPORTED = 3;
-    private final String IP_ADDRESS = "127.0.0.1";
-    private final ServerSocket serverSocket;
-
-    public ApplicationServerConnection() throws ConnectException {
-        super();
-        try {
-            super.portNumber = this.PORT_NUM;
-            super.ipAddress = InetAddress.getByName(this.IP_ADDRESS);
-            this.serverSocket = new ServerSocket(this.PORT_NUM, this.MAX_HOST_SUPPORTED, this.ipAddress);
-        } catch(UnknownHostException e) {
-            e.printStackTrace();
-            throw new ConnectException("Unknown host " + this.IP_ADDRESS);
-        } catch(IOException e) {
-            e.printStackTrace();
-            throw new ConnectException("Error opening socket at: " + this.IP_ADDRESS + "with port number " + this.PORT_NUM);
-        }
+    public ApplicationServerConnection(KnownServer properties) throws ConnectException {
+        super(properties);
     }
 
     @Override
     public AbstractFileManager getFileManagerAssociatedToConnection() {
-        return new ServerFileManager(this.IP_ADDRESS + ".txt");
+        return new ServerFileManager(super.properties.IPAddress + ".txt");
+    }
+
+    @Override
+    public String getConnectionInfo() {
+        Map<ConnectionInfo, String> info = new HashMap<>();
+        info.put(ConnectionInfo.IP_ADDRESS, super.properties.IPAddress);
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.properties.portNumber));
+        return AbstractFormatter.formatConnectionInfo(info);
     }
 
     @Override
@@ -46,9 +40,10 @@ public class ApplicationServerConnection extends AbstractServerConnection {
     @Override
     public void openConnection() {
         try {
-            Socket client = this.serverSocket.accept();
+            Socket clientSocket = this.serverSocket.accept();
             System.out.println("Connection established...");
-            new ClientServerChannel(this, client).start();
+            AbstractClientConnection clientConn = ConnectionFactory.getClientConnection(clientSocket);
+            new ClientServerChannel(this, clientConn).start();
         } catch(ConnectException e) {
             e.printStackTrace();
         } catch(IOException e) {
@@ -58,11 +53,12 @@ public class ApplicationServerConnection extends AbstractServerConnection {
 
     @Override
     public boolean matchMaxSupportedHost(int maxHost) {
-        return maxHost == this.MAX_HOST_SUPPORTED;
+        return maxHost == super.properties.maxHost;
     }
 
     @Override
     public boolean isAvailable() {
+        // TODO
         return false;
     }
 
@@ -73,12 +69,12 @@ public class ApplicationServerConnection extends AbstractServerConnection {
 
     @Override
     public boolean matchPortNumber(int portNum) {
-        return portNum == this.PORT_NUM;
+        return portNum == super.properties.portNumber;
     }
 
     @Override
     public boolean matchIPAddress(String ip) {
-        return ip.equals(this.IP_ADDRESS);
+        return ip.equals(super.properties.IPAddress);
     }
 
 }
