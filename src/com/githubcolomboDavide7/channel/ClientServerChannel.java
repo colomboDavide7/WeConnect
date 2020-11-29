@@ -5,8 +5,8 @@ import java.net.*;
 
 public class ClientServerChannel extends AbstractChannel {
 
-    public ClientServerChannel(Socket clientSocekt, AbstractLogger logger) throws ConnectException {
-        super(clientSocekt, logger);
+    public ClientServerChannel(Socket clientSocket, AbstractLogger logger) throws ConnectException {
+        super(clientSocket, logger);
     }
 
     @Override

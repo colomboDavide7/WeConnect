@@ -27,6 +27,7 @@ public class ClientConnection extends AbstractClientConnection {
         info.put(ConnectionInfo.IP_ADDRESS, super.server.IPAddress);
         info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.server.portNumber));
         info.put(ConnectionInfo.REQUEST_DATE_TIME, super.connectionTime.toString());
+        info.put(ConnectionInfo.HOST_NAME, super.server.name());
         return AbstractFormatter.formatConnectionInfo(info);
     }
 

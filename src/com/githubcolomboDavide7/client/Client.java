@@ -42,6 +42,7 @@ public class Client implements IClient {
         this.logger.setConnectionInfoToWrite(info);
         this.logger.writeToOrCreate();
         this.connections.add(newConn);
+        System.out.println("[CLIENT" + this.id + "] is connected...");
     }
 
     @Override
