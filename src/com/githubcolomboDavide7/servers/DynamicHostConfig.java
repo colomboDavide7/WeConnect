@@ -1,7 +1,8 @@
-package com.githubcolomboDavide7.appServer;
+package com.githubcolomboDavide7.servers;
 
 import com.githubcolomboDavide7.connection.AbstractServerConnection;
 import com.githubcolomboDavide7.connection.ConnectionFactory;
+import com.githubcolomboDavide7.connection.KnownServer;
 import com.githubcolomboDavide7.tools.AbstractLogger;
 
 import java.net.ConnectException;
@@ -14,21 +15,11 @@ public class DynamicHostConfig implements IDynamicHostConfig, Runnable {
     }
 
     private final AbstractServerConnection myConn;
-    private final AbstractLogger logger;
+    private AbstractLogger logger;
 
     private DynamicHostConfig() throws ConnectException {
         this.myConn = ConnectionFactory.getServiceConnection("dhcp");
-        this.logger = this.myConn.getFileManagerAssociatedToConnection();
-    }
-
-    @Override
-    public boolean matchPortNumber(int portNumber) {
-        return this.myConn.matchPortNumber(portNumber);
-    }
-
-    @Override
-    public boolean matchIPAddress(String ip) {
-        return this.myConn.matchIPAddress(ip);
+        //this.logger = this.myConn.getFileManagerAssociatedToConnection();
     }
 
     @Override
@@ -58,4 +49,8 @@ public class DynamicHostConfig implements IDynamicHostConfig, Runnable {
         }
     }
 
+    @Override
+    public boolean matchServer(KnownServer server) {
+        return false;
+    }
 }

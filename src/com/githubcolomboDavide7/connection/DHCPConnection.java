@@ -13,8 +13,8 @@ public class DHCPConnection extends AbstractServerConnection {
     }
 
     @Override
-    public AbstractLogger getFileManagerAssociatedToConnection() {
-        return super.logger;
+    public List<String> getConnections() {
+        return null;
     }
 
     @Override
@@ -41,9 +41,7 @@ public class DHCPConnection extends AbstractServerConnection {
             System.out.println("[DHCP] Waiting for clients...");
             Socket clientSocket = this.serverSocket.accept();
             System.out.println("[DHCP] Client accepted...");
-            super.pool.execute(new ClientServerChannel(clientSocket));
-            super.logger.setConnectionInfoToWrite(getConnectionInfo(clientSocket));
-            super.logger.writeToOrCreate();
+            super.pool.execute(new ClientDHCPChannel(clientSocket, this.logger));
         } catch(ConnectException e) {
             e.printStackTrace();
         } catch(IOException e) {
@@ -70,16 +68,6 @@ public class DHCPConnection extends AbstractServerConnection {
     @Override
     public boolean isClosed() {
         return this.serverSocket.isClosed();
-    }
-
-    @Override
-    public boolean matchPortNumber(int portNum) {
-        return portNum == super.properties.portNumber;
-    }
-
-    @Override
-    public boolean matchIPAddress(String ip) {
-        return ip.equals(super.properties.IPAddress);
     }
 
 }

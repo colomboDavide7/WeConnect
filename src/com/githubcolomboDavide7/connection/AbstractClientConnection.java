@@ -3,32 +3,32 @@ package com.githubcolomboDavide7.connection;
 import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
+import java.time.*;
+import java.time.format.*;
 
 public abstract class AbstractClientConnection implements IAbstractConnection {
 
     protected final Socket socket;
-    protected final AbstractLogger fileManager;
-    protected final int serverPort;
+    protected final AbstractLogger logger;
+    protected final LocalDateTime connectionStart;
+    protected final KnownServer server;
 
-    public AbstractClientConnection(String validIP, int portNum) throws ConnectException {
+    public AbstractClientConnection(KnownServer server) throws ConnectException {
         try {
-            this.socket = new Socket(validIP, portNum);
-            this.serverPort = portNum;
-            this.fileManager = new ClientLogger(this.socket.getInetAddress().getHostAddress() + ".txt");
-            this.fileManager.setConnectionInfoToWrite(this.getConnectionInfo(this.socket));
-            this.fileManager.writeToOrCreate();
+            this.socket = new Socket(server.IPAddress, server.portNumber);
+            this.server = server;
+            this.logger = new ClientLogger(this.socket.getInetAddress().getHostAddress() + ".txt");
+            this.connectionStart = LocalDateTime.now();
+            this.connectionStart.format(DateTimeFormatter.BASIC_ISO_DATE);
         } catch(IOException e) {
             e.printStackTrace();
-            throw new ConnectException("Error opening Client Socket at: " + validIP + " with port number " + portNum);
+            throw new ConnectException("Error opening Client Socket at: " + server.IPAddress
+                                     + " with port number " + server.portNumber);
         }
     }
 
-    public AbstractClientConnection(Socket clientSocket){
-        this.socket = clientSocket;
-        this.serverPort = clientSocket.getLocalPort();
-        this.fileManager = new ClientLogger(this.socket.getInetAddress().getHostAddress() + ".txt");
-    }
+    public abstract String getFormattedConnectionInfo();
 
-    public abstract String appendHostName(String path);
+    public abstract boolean matchServer(KnownServer server);
 
 }

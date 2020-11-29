@@ -1,15 +1,14 @@
 package com.githubcolomboDavide7.connection;
 
-import com.githubcolomboDavide7.tools.AbstractLogger;
-import com.githubcolomboDavide7.tools.ServerLogger;
-
+import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import java.util.concurrent.*;
 
 public abstract class AbstractServerConnection implements IAbstractConnection {
 
-    protected KnownServer properties;
+    protected final KnownServer properties;
     protected final ServerSocket serverSocket;
     protected final ExecutorService pool;
     protected final AbstractLogger logger;
@@ -28,6 +27,10 @@ public abstract class AbstractServerConnection implements IAbstractConnection {
                     " with port number " + properties.portNumber);
         }
     }
+
+    public abstract List<String> getConnections();
+
+    public abstract String getConnectionInfo(Socket clientSocket);
 
     public abstract boolean matchMaxSupportedHost(int maxHost);
 

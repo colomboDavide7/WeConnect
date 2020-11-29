@@ -3,35 +3,12 @@ package com.githubcolomboDavide7.connection;
 import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ClientConnection extends AbstractClientConnection {
 
-    public ClientConnection(String validIP, int portNum) throws ConnectException {
-        super(validIP, portNum);
-    }
-
-    public ClientConnection(Socket clientSocket){
-        super(clientSocket);
-    }
-
-    @Override
-    public String appendHostName(String path) {
-        return path + this.socket.getInetAddress().getHostAddress();
-    }
-
-    @Override
-    public AbstractLogger getFileManagerAssociatedToConnection() {
-        return super.fileManager;
-    }
-
-    @Override
-    public String getConnectionInfo(Socket clientSocket) {
-        Map<ConnectionInfo, String> info = new HashMap<>();
-        info.put(ConnectionInfo.IP_ADDRESS, clientSocket.getInetAddress().getHostAddress());
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(clientSocket.getPort()));
-        return AbstractFormatter.formatConnectionInfo(info);
+    public ClientConnection(KnownServer server) throws ConnectException {
+        super(server);
     }
 
     @Override
@@ -45,19 +22,23 @@ public class ClientConnection extends AbstractClientConnection {
     }
 
     @Override
-    public void openConnection() throws ConnectException {
-        //AbstractServerConnection serverConn = ConnectionFactory.getServiceConnection("app_server");
-        //new ClientServerChannel(serverConn, this).start();
+    public void openConnection() {
+        this.logger.setConnectionInfoToWrite(this.getFormattedConnectionInfo());
+        this.logger.writeToOrCreate();
     }
 
     @Override
-    public boolean matchPortNumber(int portNum) {
-        return portNum == super.socket.getPort();
+    public String getFormattedConnectionInfo() {
+        Map<ConnectionInfo, String> info = new HashMap<>();
+        info.put(ConnectionInfo.IP_ADDRESS, super.server.IPAddress);
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.server.portNumber));
+        info.put(ConnectionInfo.REQUEST_DATE_TIME, this.connectionStart.toString());
+        return AbstractFormatter.formatConnectionInfo(info);
     }
 
     @Override
-    public boolean matchIPAddress(String ip) {
-        return ip.equals(super.socket.getInetAddress().getHostAddress());
+    public boolean matchServer(KnownServer server) {
+        return super.server.equalTo(server);
     }
 
 }

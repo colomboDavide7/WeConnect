@@ -5,52 +5,50 @@ import com.githubcolomboDavide7.tools.*;
 import java.net.*;
 import java.util.*;
 
-public class Client implements IClient{
+public class Client implements IClient {
 
-    public static IClient connect(String ipAddress, int portNumber) throws ConnectException {
-        return new Client(ipAddress, portNumber);
-    }
+    private final List<AbstractClientConnection> connections;
+    private final AbstractLogger logger;
 
-    public static IClient connect(KnownServer server) throws ConnectException {
-        return new Client(server.IPAddress, server.portNumber);
-    }
-
-    private final AbstractClientConnection myConn;
-    private final AbstractLogger fileManager;
-
-    private Client(String ipAddress, int portNumber) throws ConnectException {
-        this.myConn = ConnectionFactory.getClientConnection(ipAddress, portNumber);
-        this.fileManager = myConn.getFileManagerAssociatedToConnection();
+    public Client() {
+        this.connections = new ArrayList<>();
+        this.logger = new ClientLogger("TEST.txt");         // TODO - change filename
     }
 
     @Override
-    public boolean matchPortNumber(int portNumber) {
-        return this.myConn.matchPortNumber(portNumber);
+    public void close(KnownServer server) throws ConnectException {
+        if(!alreadyConnected(server))
+            throw new ConnectException("Not connected to " + server.IPAddress);
+        for(AbstractClientConnection c : connections)
+            if(c.matchServer(server))
+                shutDownAndClearConnection(c);
+    }
+
+    private void shutDownAndClearConnection(AbstractClientConnection c) throws ConnectException{
+        c.closeConnection();
+        this.connections.remove(c);
     }
 
     @Override
-    public boolean matchIPAddress(String ip) {
-        return this.myConn.matchIPAddress(ip);
+    public void open(KnownServer server) throws ConnectException {
+        if(alreadyConnected(server))
+            throw new ConnectException("Already connected to " + server.IPAddress);
+        AbstractClientConnection newConn = ConnectionFactory.getClientConnection(server);
+        newConn.openConnection();
+        this.connections.add(newConn);
     }
 
     @Override
-    public void close() throws ConnectException {
-        this.myConn.closeConnection();
-    }
-
-    @Override
-    public void open() throws ConnectException {
-        this.myConn.openConnection();
-    }
-
-    @Override
-    public String appendHostNameToPath(String path) {
-        return myConn.appendHostName(path);
+    public boolean alreadyConnected(KnownServer server) {
+        for(AbstractClientConnection c : connections)
+            if(c.matchServer(server))
+                return true;
+        return false;
     }
 
     @Override
     public List<String> getEstablishedConnections() {
-        return this.fileManager.openAndReadTextFile();
+        return this.logger.openAndReadTextFile();
     }
 
 }

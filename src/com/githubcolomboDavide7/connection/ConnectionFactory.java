@@ -22,15 +22,15 @@ public class ConnectionFactory {
         for(AbstractServerConnection c : serverConnectionList)
             if(c.matchServer(KnownServer.get(target)))
                 return c;
-        throw new ConnectException("No DHCP server found!");
+        throw new ConnectException("No " + target + " server found!");
     }
 
-    public static AbstractClientConnection getClientConnection(String ip, int portNum) throws ConnectException{
-        return new ClientConnection(ip, portNum);
+    public static AbstractClientConnection getClientConnection(KnownServer server) throws ConnectException{
+        return new ClientConnection(server);
     }
 
-    public static AbstractClientConnection getClientConnection(Socket clientSocket) {
+    /*public static AbstractClientConnection getClientConnection(Socket clientSocket) {
         return new ClientConnection(clientSocket);
-    }
+    }*/
 
 }

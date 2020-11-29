@@ -1,8 +1,6 @@
-package com.githubcolomboDavide7.appServer;
+package com.githubcolomboDavide7.servers;
 
 import com.githubcolomboDavide7.connection.*;
-import com.githubcolomboDavide7.tools.AbstractLogger;
-
 import java.net.*;
 import java.util.*;
 
@@ -17,31 +15,9 @@ public class ApplicationServer implements IApplicationServer, Runnable {
     }
 
     private final AbstractServerConnection myConn;
-    private final AbstractLogger logger;
 
     private ApplicationServer() throws ConnectException {
         this.myConn = ConnectionFactory.getServiceConnection("app_server");
-        this.logger = myConn.getFileManagerAssociatedToConnection();
-    }
-
-    @Override
-    public boolean matchPortNumber(int portNumber) {
-        return this.myConn.matchPortNumber(portNumber);
-    }
-
-    @Override
-    public boolean matchIPAddress(String ip) {
-        return myConn.matchIPAddress(ip);
-    }
-
-    @Override
-    public List<String> getEstablishedConnections() {
-        return this.logger.openAndReadTextFile();
-    }
-
-    @Override
-    public void close() throws ConnectException {
-        myConn.closeConnection();
     }
 
     @Override
@@ -61,4 +37,18 @@ public class ApplicationServer implements IApplicationServer, Runnable {
         }
     }
 
+    @Override
+    public void close() throws ConnectException {
+        myConn.closeConnection();
+    }
+
+    @Override
+    public List<String> getEstablishedConnections() {
+        return this.myConn.getConnections();
+    }
+
+    @Override
+    public boolean matchServer(KnownServer server) {
+        return server.equalTo(KnownServer.APP_SERVER);
+    }
 }

@@ -24,4 +24,10 @@ public enum KnownServer {
         throw new IllegalArgumentException("No server that correspond to " + target);
     }
 
+    public boolean equalTo(KnownServer server){
+        return server.IPAddress == this.IPAddress &&
+               server.portNumber == this.portNumber &&
+               server.maxHost == this.maxHost;
+    }
+
 }

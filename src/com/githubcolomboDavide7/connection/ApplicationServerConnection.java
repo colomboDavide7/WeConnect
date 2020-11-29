@@ -2,11 +2,11 @@ package com.githubcolomboDavide7.connection;
 
 import com.githubcolomboDavide7.channel.*;
 import com.githubcolomboDavide7.tools.*;
-
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
 public class ApplicationServerConnection extends AbstractServerConnection {
 
@@ -15,15 +15,18 @@ public class ApplicationServerConnection extends AbstractServerConnection {
     }
 
     @Override
-    public AbstractLogger getFileManagerAssociatedToConnection() {
-        return super.logger;
+    public List<String> getConnections() {
+        return this.logger.openAndReadTextFile();
     }
 
     @Override
     public String getConnectionInfo(Socket clientSocket) {
+        LocalDateTime connectionTime = LocalDateTime.now();
+        connectionTime.format(DateTimeFormatter.BASIC_ISO_DATE);
         Map<ConnectionInfo, String> info = new HashMap<>();
         info.put(ConnectionInfo.IP_ADDRESS, clientSocket.getInetAddress().getHostAddress());
         info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(clientSocket.getLocalPort()));
+        info.put(ConnectionInfo.REQUEST_DATE_TIME, connectionTime.toString());
         return AbstractFormatter.formatConnectionInfo(info);
     }
 
@@ -43,7 +46,7 @@ public class ApplicationServerConnection extends AbstractServerConnection {
             System.out.println("[SERVER] Waiting for clients...");
             Socket clientSocket = this.serverSocket.accept();
             System.out.println("[SERVER] Client accepted...");
-            super.pool.execute(new ClientServerChannel(clientSocket));
+            super.pool.execute(new ClientServerChannel(clientSocket, this.logger));
             super.logger.setConnectionInfoToWrite(this.getConnectionInfo(clientSocket));
             super.logger.writeToOrCreate();
         } catch(ConnectException e) {
@@ -72,16 +75,6 @@ public class ApplicationServerConnection extends AbstractServerConnection {
     @Override
     public boolean isClosed() {
         return this.serverSocket.isClosed();
-    }
-
-    @Override
-    public boolean matchPortNumber(int portNum) {
-        return portNum == super.properties.portNumber;
-    }
-
-    @Override
-    public boolean matchIPAddress(String ip) {
-        return ip.equals(super.properties.IPAddress);
     }
 
 }

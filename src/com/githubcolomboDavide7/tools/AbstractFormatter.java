@@ -35,4 +35,18 @@ public class AbstractFormatter {
         return maxPos;
     }
 
+    public static Map<ConnectionInfo, String> parseRecord(String line){
+        String[] keyValuePairs = line.split(fieldSeparator);
+        Map<ConnectionInfo, String> converted = new HashMap<>(keyValuePairs.length);
+        for(String s : keyValuePairs)
+            appendKeyValue(converted, s);
+        return converted;
+    }
+
+    private static void appendKeyValue(Map<ConnectionInfo, String> map, String keyValue){
+        String key = keyValue.split(keyvalueSeparator)[0];
+        String value = keyValue.split(keyvalueSeparator)[1];
+        map.put(ConnectionInfo.valueOf(key), value);
+    }
+
 }
