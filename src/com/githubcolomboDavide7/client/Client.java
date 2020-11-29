@@ -7,12 +7,16 @@ import java.util.*;
 
 public class Client implements IClient {
 
+    public static int CLIENT_ID = 0;
+
     private final List<AbstractClientConnection> connections;
     private final AbstractLogger logger;
+    private final int id;
 
     public Client() {
         this.connections = new ArrayList<>();
-        this.logger = new ClientLogger("TEST.txt");         // TODO - change filename
+        this.id = ++CLIENT_ID;
+        this.logger = new ClientLogger("CLIENT" + this.id +".txt");
     }
 
     @Override
@@ -34,7 +38,9 @@ public class Client implements IClient {
         if(alreadyConnected(server))
             throw new ConnectException("Already connected to " + server.IPAddress);
         AbstractClientConnection newConn = ConnectionFactory.getClientConnection(server);
-        newConn.openConnection();
+        String info = newConn.getFormattedConnectionInfo();
+        this.logger.setConnectionInfoToWrite(info);
+        this.logger.writeToOrCreate();
         this.connections.add(newConn);
     }
 

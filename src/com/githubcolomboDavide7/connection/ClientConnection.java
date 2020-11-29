@@ -22,17 +22,11 @@ public class ClientConnection extends AbstractClientConnection {
     }
 
     @Override
-    public void openConnection() {
-        this.logger.setConnectionInfoToWrite(this.getFormattedConnectionInfo());
-        this.logger.writeToOrCreate();
-    }
-
-    @Override
     public String getFormattedConnectionInfo() {
         Map<ConnectionInfo, String> info = new HashMap<>();
         info.put(ConnectionInfo.IP_ADDRESS, super.server.IPAddress);
         info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.server.portNumber));
-        info.put(ConnectionInfo.REQUEST_DATE_TIME, this.connectionStart.toString());
+        info.put(ConnectionInfo.REQUEST_DATE_TIME, super.connectionTime.toString());
         return AbstractFormatter.formatConnectionInfo(info);
     }
 

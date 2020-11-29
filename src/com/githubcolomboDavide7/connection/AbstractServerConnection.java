@@ -32,6 +32,8 @@ public abstract class AbstractServerConnection implements IAbstractConnection {
 
     public abstract String getConnectionInfo(Socket clientSocket);
 
+    public abstract void openConnection() throws ConnectException;
+
     public abstract boolean matchMaxSupportedHost(int maxHost);
 
     public abstract boolean matchServer(KnownServer serverProp);
