@@ -37,12 +37,9 @@ public class Client implements IClient {
     public void open(KnownServer server) throws ConnectException {
         if(alreadyConnected(server))
             throw new ConnectException("Already connected to " + server.IPAddress);
-        AbstractClientConnection newConn = ConnectionFactory.getClientConnection(server);
-        String info = newConn.getFormattedConnectionInfo();
-        this.logger.setConnectionInfoToWrite(info);
-        this.logger.writeToOrCreate();
+        AbstractClientConnection newConn = ConnectionFactory.getClientConnection(server, this.logger);
+        newConn.openConnection();
         this.connections.add(newConn);
-        System.out.println("[CLIENT" + this.id + "] is connected...");
     }
 
     @Override

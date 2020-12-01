@@ -1,5 +1,7 @@
 package com.githubcolomboDavide7.connection;
 
+import com.githubcolomboDavide7.tools.AbstractLogger;
+
 import java.net.*;
 import java.util.*;
 
@@ -25,8 +27,8 @@ public class ConnectionFactory {
         throw new ConnectException("No " + target + " server found!");
     }
 
-    public static AbstractClientConnection getClientConnection(KnownServer server) throws ConnectException{
-        return new ClientConnection(server);
+    public static AbstractClientConnection getClientConnection(KnownServer server, AbstractLogger logger) throws ConnectException{
+        return new ClientConnection(server, logger);
     }
 
     /*public static AbstractClientConnection getClientConnection(Socket clientSocket) {

@@ -1,5 +1,6 @@
 package com.githubcolomboDavide7.connection;
 
+import com.githubcolomboDavide7.channel.ClientServerChannel;
 import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
@@ -7,8 +8,8 @@ import java.util.*;
 
 public class ClientConnection extends AbstractClientConnection {
 
-    public ClientConnection(KnownServer server) throws ConnectException {
-        super(server);
+    public ClientConnection(KnownServer server, AbstractLogger logger) throws ConnectException {
+        super(server, logger);
     }
 
     @Override
@@ -22,13 +23,12 @@ public class ClientConnection extends AbstractClientConnection {
     }
 
     @Override
-    public String getFormattedConnectionInfo() {
-        Map<ConnectionInfo, String> info = new HashMap<>();
-        info.put(ConnectionInfo.IP_ADDRESS, super.server.IPAddress);
-        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(super.server.portNumber));
-        info.put(ConnectionInfo.REQUEST_DATE_TIME, super.connectionTime.toString());
-        info.put(ConnectionInfo.HOST_NAME, super.server.name());
-        return AbstractFormatter.formatConnectionInfo(info);
+    public void openConnection() throws ConnectException {
+        System.out.println("[CLIENT] open connection...");
+        new Thread(new ClientServerChannel(super.socket, super.logger)).start();
+        logger.setConnectionInfoToWrite(this.getFormattedConnectionInfo());
+        logger.writeToOrCreate();
+        System.out.println("[CLIENT] connection established...");
     }
 
     @Override

@@ -6,4 +6,6 @@ public interface IAbstractConnection {
 
     void closeConnection() throws ConnectException;
 
+    void openConnection() throws ConnectException;
+
 }

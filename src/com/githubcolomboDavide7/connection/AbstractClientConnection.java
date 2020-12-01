@@ -1,24 +1,25 @@
 package com.githubcolomboDavide7.connection;
 
+import com.githubcolomboDavide7.tools.*;
 import java.io.*;
 import java.net.*;
 import java.time.*;
 import java.time.format.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractClientConnection implements IAbstractConnection {
 
     protected final Socket socket;
     protected final KnownServer server;
     protected final LocalDateTime connectionTime;
-    protected final BufferedReader in;
-    protected final PrintWriter out;
+    protected final AbstractLogger logger;
 
-    public AbstractClientConnection(KnownServer server) throws ConnectException {
+    public AbstractClientConnection(KnownServer server, AbstractLogger logger) throws ConnectException {
         try {
             this.socket = new Socket(server.IPAddress, server.portNumber);
-            this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            this.out = new PrintWriter(this.socket.getOutputStream());
             this.server = server;
+            this.logger = logger;
             this.connectionTime = LocalDateTime.now();
             this.connectionTime.format(DateTimeFormatter.BASIC_ISO_DATE);
         } catch(IOException e) {
@@ -28,7 +29,14 @@ public abstract class AbstractClientConnection implements IAbstractConnection {
         }
     }
 
-    public abstract String getFormattedConnectionInfo();
+    protected String getFormattedConnectionInfo() {
+        Map<ConnectionInfo, String> info = new HashMap<>();
+        info.put(ConnectionInfo.IP_ADDRESS, server.IPAddress);
+        info.put(ConnectionInfo.PORT_NUMBER, Integer.toString(server.portNumber));
+        info.put(ConnectionInfo.REQUEST_DATE_TIME, connectionTime.toString());
+        info.put(ConnectionInfo.HOST_NAME, server.name());
+        return AbstractFormatter.formatConnectionInfo(info);
+    }
 
     public abstract boolean matchServer(KnownServer server);
 
